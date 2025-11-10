@@ -10,7 +10,7 @@ import Membership from './components/Membership';
 import ComingSoon from './components/ComingSoon';
 import Boutique from './components/Boutique';
 import FeaturedArtifacts from './components/FeaturedArtifacts';
-
+import ScrollToTop from './components/ScrollToTop';
 import ThreeDGallery from './components/ThreeDGallery';
 
 // In your <Routes> section:
@@ -26,6 +26,7 @@ import ThreeDGallery from './components/ThreeDGallery';
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/collection" element={<Collection />} />
