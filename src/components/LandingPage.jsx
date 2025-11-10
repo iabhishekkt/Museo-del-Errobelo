@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
+import LanguageDropdown from './LanguageDropdown';
 
-// Import all assets - matching exact filenames from your folder
+// Import all assets
 import ebplus1 from '../assets/ebplus1.png';
 import ebplus2 from '../assets/ebplus2.png';
 import ebplus3 from '../assets/ebplus3.png';
@@ -100,11 +101,10 @@ function LandingPage() {
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-current transform rotate-45"></div>
                     </div>
                   </button>
-                  <button className="hover:text-museum-gold transition-colors text-sm">English</button>
+                  <LanguageDropdown />
                 </div>
 
                 <div className="flex items-center gap-8">
-  
                   <Link to="/ticketing" className="bg-museum-gold text-white px-8 py-2.5 rounded-full hover:bg-museum-gold/90 transition-all duration-300 text-sm">
                     Ticketing
                   </Link>
@@ -118,10 +118,13 @@ function LandingPage() {
         <div className={`md:hidden bg-black/95 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
           <div className="container mx-auto px-8 py-4">
             <div className="flex flex-col space-y-4">
-              <Link to="/language" className="text-white hover:text-museum-gold transition-colors text-sm">English</Link>
+              <div className="text-white">
+                <LanguageDropdown />
+              </div>
               <Link to="/palace" className="text-white hover:text-museum-gold transition-colors text-sm">Visit</Link>
-              <Link to="/events" className="text-white hover:text-museum-gold transition-colors text-sm">Events</Link>
+              <Link to="/life-at-museum" className="text-white hover:text-museum-gold transition-colors text-sm">Events</Link>
               <Link to="/collection" className="text-white hover:text-museum-gold transition-colors text-sm">Explore</Link>
+              <Link to="/3d-gallery" className="text-white hover:text-museum-gold transition-colors text-sm">3D Gallery</Link>
               <Link to="/ticketing" className="bg-museum-gold text-white px-4 py-2 rounded-full text-center text-sm">Ticketing</Link>
             </div>
           </div>
@@ -135,8 +138,8 @@ function LandingPage() {
                 VISIT
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
               </Link>
-              <Link to="/life-at-museum" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                EXHIBITIONS AND EVENTS
+              <Link to="/3d-gallery" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
+                3D ART GALLERY
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
               </Link>
               <Link to="/collection" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
@@ -157,12 +160,13 @@ function LandingPage() {
                   <div className="flex">
                     <div className="w-1/2 p-8 space-y-4">
                       <Link to="/boutique" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Online boutique</Link>
-                      <Link to="/support" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</Link>
+                      <Link to="/life-at-museum" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Exhibitions and Events</Link>
+                      <Link to="/membership" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</Link>
                     </div>
                     
                     <div className="w-1/2 p-8 bg-gray-900">
                       <div className="relative">
-                        <img src={ebplus1} alt="Support the Louvre" className="w-full h-48 object-cover rounded" />
+                        <img src={ebplus1} alt="Support the Errobelo" className="w-full h-48 object-cover rounded" />
                         <div className="absolute top-4 left-4">
                           <span className="bg-white text-black px-3 py-1 text-xs font-medium rounded">Become a Patron</span>
                         </div>
@@ -185,46 +189,42 @@ function LandingPage() {
         </div>
       </header>
 
-{/* Hero Section */}
-<section className="relative h-screen overflow-hidden">
-  {/* Video Background - Fixed positioning */}
-  <div className="absolute inset-0 top-32">
-    <video 
-      autoPlay 
-      loop 
-      muted 
-      playsInline
-      className="w-full h-full object-cover"
-      style={{position: 'absolute', top: 0, left: 0, zIndex: 0}}
-    >
-      <source src="/TRIM_3.mp4" type="video/mp4" />
-    </video>
-  </div>
+      {/* Hero Section */}
+      <section className="relative h-screen overflow-hidden">
+        <div className="absolute inset-0 top-32">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            className="w-full h-full object-cover"
+            style={{position: 'absolute', top: 0, left: 0, zIndex: 0}}
+          >
+            <source src="/TRIM_3.mp4" type="video/mp4" />
+          </video>
+        </div>
 
-  {/* Dark overlay */}
-  <div className="absolute inset-0 bg-black/30" style={{zIndex: 1}}></div>
+        <div className="absolute inset-0 bg-black/30" style={{zIndex: 1}}></div>
 
-  {/* Content - needs higher z-index */}
-  <div className="absolute inset-0 flex items-center" style={{zIndex: 2}}>
-    <h1 className="hidden md:block absolute left-[8%] text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase opacity-0 animate-fadeLeftToRight" style={{fontSize: 'clamp(2.5rem, 6vw, 4.5rem)'}}>
-      EXPERIENCE<br />TIMELESS ART
-    </h1>
-    <h1 className="hidden md:block absolute right-[8%] text-right text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase opacity-0 animate-fadeRightToLeft" style={{fontSize: 'clamp(2.5rem, 6vw, 4.5rem)'}}>
-      DISCOVER<br />ERROBELO
-    </h1>
-    <h1 className="md:hidden absolute inset-0 flex items-center justify-center text-center text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase" style={{fontSize: 'clamp(2rem, 5vw, 3.5rem)'}}>
-      DISCOVER<br />ERROBELO
-    </h1>
-  </div>
+        <div className="absolute inset-0 flex items-center" style={{zIndex: 2}}>
+          <h1 className="hidden md:block absolute left-[8%] text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase opacity-0 animate-fadeLeftToRight" style={{fontSize: 'clamp(2.5rem, 6vw, 4.5rem)'}}>
+            EXPERIENCE<br />TIMELESS ART
+          </h1>
+          <h1 className="hidden md:block absolute right-[8%] text-right text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase opacity-0 animate-fadeRightToLeft" style={{fontSize: 'clamp(2.5rem, 6vw, 4.5rem)'}}>
+            DISCOVER<br />ERROBELO
+          </h1>
+          <h1 className="md:hidden absolute inset-0 flex items-center justify-center text-center text-white/90 font-extralight tracking-[0.2em] leading-tight uppercase" style={{fontSize: 'clamp(2rem, 5vw, 3.5rem)'}}>
+            DISCOVER<br />ERROBELO
+          </h1>
+        </div>
 
-  {/* Button */}
-  <div className="absolute bottom-12 left-0 right-0 flex justify-center" style={{zIndex: 2}}>
-    <Link to="/journey" className="relative bg-black/30 backdrop-blur-sm text-white px-16 py-5 rounded-full border-2 border-museum-gold/70 shadow-[0_0_20px_rgba(184,134,11,0.3)] hover:border-museum-gold hover:shadow-[0_0_30px_rgba(184,134,11,0.5)] hover:bg-black/40 transition-all duration-500 overflow-hidden group">
-      <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-museum-gold/30 to-transparent transition-all duration-600 group-hover:left-full animate-shimmer"></div>
-      <span className="relative text-lg tracking-wider uppercase font-light">Begin Your Journey</span>
-    </Link>
-  </div>
-</section>
+        <div className="absolute bottom-12 left-0 right-0 flex justify-center" style={{zIndex: 2}}>
+          <Link to="/journey" className="relative bg-black/30 backdrop-blur-sm text-white px-16 py-5 rounded-full border-2 border-museum-gold/70 shadow-[0_0_20px_rgba(184,134,11,0.3)] hover:border-museum-gold hover:shadow-[0_0_30px_rgba(184,134,11,0.5)] hover:bg-black/40 transition-all duration-500 overflow-hidden group">
+            <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-museum-gold/30 to-transparent transition-all duration-600 group-hover:left-full animate-shimmer"></div>
+            <span className="relative text-lg tracking-wider uppercase font-light">Begin Your Journey</span>
+          </Link>
+        </div>
+      </section>
 
       {/* ERROBELO+ Section */}
       <section className="py-24 bg-black">
@@ -348,229 +348,217 @@ function LandingPage() {
           </div>
           
           <div className="flex justify-center mt-12">
-            <Link to="/errobelo-plus" className="bg-white text-black rounded-full px-8 py-3 text-lg font-medium shadow hover:bg-gray-100 transition">
-              More content on ERROBELO+
+            <Link to="/life-at-museum" className="bg-white text-black rounded-full px-8 py-3 text-lg font-medium shadow hover:bg-gray-100 transition">
+              More on ERROBELO
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Collection Gallery - RESTORED */}
-<section className="bg-black relative overflow-hidden max-h-[700px]">
-  <div className="max-w-7xl mx-auto px-4">
-    <div className="w-full flex flex-col md:flex-row gap-8 justify-center items-start">
-      <div className="flex flex-col gap-8 w-full md:w-1/3">
-        <img src={collectionmain1} alt="Ceiling" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
-        <img src={collectionmain2} alt="Statue" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
-      </div>
-      
-      <div className="flex flex-col gap-8 w-full md:w-1/3 relative">
-        <img src={collectionmain3} alt="Relief" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
-        <img src={collectionmain4} alt="Painting" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
-        <div className="relative w-full">
-          <img src={collectionmain5} alt="Ancient Wall" className="rounded-lg object-cover w-full h-48 bg-gray-800" />
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-16 z-30">
-            <Link to="/collection" className="bg-white text-black rounded-full px-8 py-3 text-lg font-medium shadow hover:bg-gray-100 transition">
-              Explore
-            </Link>
+      {/* Collection Gallery */}
+      <section className="bg-black relative overflow-hidden max-h-[700px]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="w-full flex flex-col md:flex-row gap-8 justify-center items-start">
+            <div className="flex flex-col gap-8 w-full md:w-1/3">
+              <img src={collectionmain1} alt="Ceiling" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
+              <img src={collectionmain2} alt="Statue" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
+            </div>
+            
+            <div className="flex flex-col gap-8 w-full md:w-1/3 relative">
+              <img src={collectionmain3} alt="Relief" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
+              <img src={collectionmain4} alt="Painting" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
+              <div className="relative w-full">
+                <img src={collectionmain5} alt="Ancient Wall" className="rounded-lg object-cover w-full h-48 bg-gray-800" />
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-16 z-30">
+                  <Link to="/collection" className="bg-white text-black rounded-full px-8 py-3 text-lg font-medium shadow hover:bg-gray-100 transition">
+                    Explore
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-8 w-full md:w-1/3">
+              <img src={collectionmain6} alt="Tilework" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
+              <img src={collectionmain7} alt="Statue 2" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="flex flex-col gap-8 w-full md:w-1/3">
-        <img src={collectionmain6} alt="Tilework" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
-        <img src={collectionmain7} alt="Statue 2" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
-      </div>
-    </div>
-  </div>
-  
-  <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-40 z-30 bg-gradient-to-b from-transparent to-black"></div>
-</section>
+        
+        <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-40 z-30 bg-gradient-to-b from-transparent to-black"></div>
+      </section>
 
+      {/* Featured Collection Section */}
+      <section className="py-16 bg-black overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <h2 className="text-5xl text-white font-light mb-4 tracking-wide">
+            FEATURED COLLECTION
+          </h2>
+          <p className="text-gray-400 text-lg mb-12 font-light">
+            Discover our most celebrated artifacts from civilizations across the globe
+          </p>
+          
+          <div className="relative -mx-4 md:-mx-8">
+            <button 
+              onClick={() => {
+                const container = document.getElementById('featuredCarousel');
+                container.scrollBy({ left: -350, behavior: 'smooth' });
+              }}
+              className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-black/90 text-white p-4 rounded-full backdrop-blur-sm transition-all shadow-xl"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
 
-      {/* Featured Collection Section - Auto-scrolling Infinite Carousel */}
-<section className="py-16 bg-black overflow-hidden">
-  <div className="max-w-7xl mx-auto px-4 md:px-8">
-    <h2 className="text-5xl text-white font-light mb-4 tracking-wide">
-      FEATURED COLLECTION
-    </h2>
-    <p className="text-gray-400 text-lg mb-12 font-light">
-      Discover our most celebrated artifacts from civilizations across the globe
-    </p>
-    
-    {/* Carousel Container */}
-    <div className="relative -mx-4 md:-mx-8">
-      {/* Left Arrow - Positioned more to the side */}
-      <button 
-        onClick={() => {
-          const container = document.getElementById('featuredCarousel');
-          container.scrollBy({ left: -350, behavior: 'smooth' });
-        }}
-        className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-black/90 text-white p-4 rounded-full backdrop-blur-sm transition-all shadow-xl"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
+            <div 
+              id="featuredCarousel"
+              className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-4 md:px-8"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {[...Array(5)].map((_, setIndex) => (
+                <React.Fragment key={setIndex}>
+                  <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
+                    <div className="relative h-96">
+                      <img 
+                        src="https://i.pinimg.com/564x/4f/c6/d8/4fc6d8d7e86886f606495abc4f1680e6.jpg" 
+                        alt="Ancient Greek Amphora" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
+                      
+                      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                        <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
+                          Ancient Greek Amphora
+                        </h3>
+                        <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
+                          500-450 BCE
+                        </p>
+                        <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
+                          Masterfully crafted red-figure vessel from Athens
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                  
+                  <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
+                    <div className="relative h-96">
+                      <img 
+                        src="https://images.pexels.com/photos/14681329/pexels-photo-14681329.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" 
+                        alt="Egyptian Canopic Jar" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
+                      
+                      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                        <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
+                          Egyptian Canopic Jar
+                        </h3>
+                        <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
+                          1400-1300 BCE
+                        </p>
+                        <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
+                          Sacred vessel from New Kingdom burial practices
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                  
+                  <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
+                    <div className="relative h-96">
+                      <img 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Buste_4_Bardo_National_Museum.jpg/250px-Buste_4_Bardo_National_Museum.jpg" 
+                        alt="Roman Marble Bust" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
+                      
+                      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                        <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
+                          Roman Marble Bust
+                        </h3>
+                        <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
+                          100-200 CE
+                        </p>
+                        <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
+                          Exquisitely preserved Antonine period sculpture
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                  
+                  <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
+                    <div className="relative h-96">
+                      <img 
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS90rl6lGPpWkjtDaGQSOMpwNbxt2mSp3FswQ&s" 
+                        alt="Ming Dynasty Vase" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
+                      
+                      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                        <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
+                          Ming Dynasty Vase
+                        </h3>
+                        <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
+                          1368-1644 CE
+                        </p>
+                        <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
+                          Blue and white porcelain with dragon motifs
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                  
+                  <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
+                    <div className="relative h-96">
+                      <img 
+                        src="https://cdn.sanity.io/images/cxgd3urn/production/0849783912550b396d3c6d9c91b201e23cfd9507-2327x1701.jpg" 
+                        alt="Mesopotamian Clay Tablet" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
+                      
+                      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                        <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
+                          Mesopotamian Clay Tablet
+                        </h3>
+                        <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
+                          2000-1800 BCE
+                        </p>
+                        <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
+                          Ancient cuneiform script detailing administrative records
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </React.Fragment>
+              ))}
+            </div>
 
-      {/* Scrollable Cards */}
-      <div 
-        id="featuredCarousel"
-        className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-4 md:px-8"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {/* Repeat artifacts multiple times for infinite effect */}
-        {[...Array(5)].map((_, setIndex) => (
-          <React.Fragment key={setIndex}>
-            {/* Featured Card 1 - Ancient Greek Amphora */}
-            <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
-              <div className="relative h-96">
-                <img 
-                  src="https://i.pinimg.com/564x/4f/c6/d8/4fc6d8d7e86886f606495abc4f1680e6.jpg" 
-                  alt="Ancient Greek Amphora" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
-                
-                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
-                    Ancient Greek Amphora
-                  </h3>
-                  <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
-                    500-450 BCE
-                  </p>
-                  <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
-                    Masterfully crafted red-figure vessel from Athens
-                  </p>
-                </div>
-              </div>
-            </Link>
-            
-            {/* Featured Card 2 - Egyptian Canopic Jar */}
-            <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
-              <div className="relative h-96">
-                <img 
-                  src="https://images.pexels.com/photos/14681329/pexels-photo-14681329.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" 
-                  alt="Egyptian Canopic Jar" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
-                
-                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
-                    Egyptian Canopic Jar
-                  </h3>
-                  <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
-                    1400-1300 BCE
-                  </p>
-                  <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
-                    Sacred vessel from New Kingdom burial practices
-                  </p>
-                </div>
-              </div>
-            </Link>
-            
-            {/* Featured Card 3 - Roman Marble Bust */}
-            <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
-              <div className="relative h-96">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Buste_4_Bardo_National_Museum.jpg/250px-Buste_4_Bardo_National_Museum.jpg" 
-                  alt="Roman Marble Bust" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
-                
-                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
-                    Roman Marble Bust
-                  </h3>
-                  <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
-                    100-200 CE
-                  </p>
-                  <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
-                    Exquisitely preserved Antonine period sculpture
-                  </p>
-                </div>
-              </div>
-            </Link>
-            
-            {/* Featured Card 4 - Ming Dynasty Vase */}
-            <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
-              <div className="relative h-96">
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS90rl6lGPpWkjtDaGQSOMpwNbxt2mSp3FswQ&s" 
-                  alt="Ming Dynasty Vase" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
-                
-                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
-                    Ming Dynasty Vase
-                  </h3>
-                  <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
-                    1368-1644 CE
-                  </p>
-                  <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
-                    Blue and white porcelain with dragon motifs
-                  </p>
-                </div>
-              </div>
-            </Link>
-            
-            {/* Featured Card 5 - Mesopotamian Clay Tablet */}
-            <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
-              <div className="relative h-96">
-                <img 
-                  src="https://cdn.sanity.io/images/cxgd3urn/production/0849783912550b396d3c6d9c91b201e23cfd9507-2327x1701.jpg" 
-                  alt="Mesopotamian Clay Tablet" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-500"></div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm"></div>
-                
-                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-light text-xl mb-2 leading-tight drop-shadow-lg">
-                    Mesopotamian Clay Tablet
-                  </h3>
-                  <p className="text-museum-gold text-xs uppercase tracking-widest font-normal mb-2 drop-shadow-lg">
-                    2000-1800 BCE
-                  </p>
-                  <p className="text-white/95 text-sm font-light leading-relaxed drop-shadow-lg">
-                    Ancient cuneiform script detailing administrative records
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </React.Fragment>
-        ))}
-      </div>
-
-      {/* Right Arrow - Positioned more to the side */}
-      <button 
-        onClick={() => {
-          const container = document.getElementById('featuredCarousel');
-          container.scrollBy({ left: 350, behavior: 'smooth' });
-        }}
-        className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-black/90 text-white p-4 rounded-full backdrop-blur-sm transition-all shadow-xl"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
-  </div>
-</section>
-
+            <button 
+              onClick={() => {
+                const container = document.getElementById('featuredCarousel');
+                container.scrollBy({ left: 350, behavior: 'smooth' });
+              }}
+              className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-20 bg-black/70 hover:bg-black/90 text-white p-4 rounded-full backdrop-blur-sm transition-all shadow-xl"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Map Section */}
       <section className="w-full bg-black">
@@ -648,7 +636,7 @@ function LandingPage() {
               <li><Link to="/ticketing" className="hover:underline">Online ticketing service</Link></li>
               <li><Link to="/boutique" className="hover:underline">Online Boutique</Link></li>
               <li><Link to="/collection" className="hover:underline">Collection</Link></li>
-              <li><Link to="/corpus" className="hover:underline">Corpus</Link></li>
+              <li><Link to="/3d-gallery" className="hover:underline">3D Gallery</Link></li>
               <li><Link to="/donate" className="hover:underline">Donate</Link></li>
               <li><Link to="/press" className="hover:underline">Press</Link></li>
             </ul>

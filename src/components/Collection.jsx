@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import LanguageDropdown from './LanguageDropdown';
 
 // Import images
 import collectionHeader from '../assets/collection_header.jpg';
@@ -60,11 +61,10 @@ function Collection() {
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-current transform rotate-45"></div>
                     </div>
                   </button>
-                  <button className="hover:text-museum-gold transition-colors text-sm">English</button>
+                  <LanguageDropdown />
                 </div>
 
                 <div className="flex items-center gap-8">
-                  
                   <Link to="/ticketing" className="bg-museum-gold text-white px-8 py-2.5 rounded-full hover:bg-museum-gold/90 transition-all duration-300 text-sm">
                     Ticketing
                   </Link>
@@ -78,10 +78,13 @@ function Collection() {
         <div className={`md:hidden bg-black/95 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
           <div className="container mx-auto px-8 py-4">
             <div className="flex flex-col space-y-4">
-              <Link to="/language" className="text-white hover:text-museum-gold transition-colors text-sm">English</Link>
+              <div className="text-white">
+                <LanguageDropdown />
+              </div>
               <Link to="/palace" className="text-white hover:text-museum-gold transition-colors text-sm">Visit</Link>
               <Link to="/life-at-museum" className="text-white hover:text-museum-gold transition-colors text-sm">Events</Link>
               <Link to="/collection" className="text-white hover:text-museum-gold transition-colors text-sm">Explore</Link>
+              <Link to="/3d-gallery" className="text-white hover:text-museum-gold transition-colors text-sm">3D Gallery</Link>
               <Link to="/ticketing" className="bg-museum-gold text-white px-4 py-2 rounded-full text-center text-sm">Ticketing</Link>
             </div>
           </div>
@@ -95,8 +98,8 @@ function Collection() {
                 VISIT
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
               </Link>
-              <Link to="/life-at-museum" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                EXHIBITIONS AND EVENTS
+              <Link to="/3d-gallery" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
+                3D ART GALLERY
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
               </Link>
               <Link to="/collection" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
@@ -117,7 +120,8 @@ function Collection() {
                   <div className="flex">
                     <div className="w-1/2 p-8 space-y-4">
                       <Link to="/boutique" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Online boutique</Link>
-                      <Link to="/support" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</Link>
+                      <Link to="/life-at-museum" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Exhibitions and Events</Link>
+                      <Link to="/coming-soon" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</Link>
                     </div>
                     
                     <div className="w-1/2 p-8 bg-gray-900">
@@ -128,7 +132,7 @@ function Collection() {
                         </div>
                       </div>
                       <div className="mt-6">
-                        <Link to="/support" className="flex items-center text-white hover:text-museum-gold transition-colors group/link">
+                        <Link to="/coming-soon" className="flex items-center text-white hover:text-museum-gold transition-colors group/link">
                           <span className="text-lg font-light mr-2">Support the Errobelo</span>
                           <svg className="w-5 h-5 transition-transform group-hover/link:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -190,32 +194,32 @@ function Collection() {
           <div>
             <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">About</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="hover:underline">The Errobelo in France and around the world</Link></li>
-              <li><Link to="/rules" className="hover:underline">Visitor rules</Link></li>
-              <li><Link to="/loans" className="hover:underline">Loans and long-term loans</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">The Errobelo in France and around the world</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Visitor rules</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Loans and long-term loans</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Our Websites</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/ticketing" className="hover:underline">Online ticketing service</Link></li>
-              <li><Link to="/boutique" className="hover:underline">Online Boutique</Link></li>
-              <li><Link to="/collection" className="hover:underline">Collection</Link></li>
-              <li><Link to="/corpus" className="hover:underline">Corpus</Link></li>
-              <li><Link to="/donate" className="hover:underline">Donate</Link></li>
-              <li><Link to="/press" className="hover:underline">Press</Link></li>
+              <li><Link to="/ticketing" className="hover:underline hover:text-white transition-colors">Online ticketing service</Link></li>
+              <li><Link to="/boutique" className="hover:underline hover:text-white transition-colors">Online Boutique</Link></li>
+              <li><Link to="/collection" className="hover:underline hover:text-white transition-colors">Collection</Link></li>
+              <li><Link to="/3d-gallery" className="hover:underline hover:text-white transition-colors">3D Gallery</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Donate</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Press</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/faqs" className="hover:underline">FAQ</Link></li>
-              <li><Link to="/contact" className="hover:underline">Contact us</Link></li>
-              <li><Link to="/feedback" className="hover:underline">Give us your feedback!</Link></li>
-              <li><Link to="/jobs" className="hover:underline">Jobs (in French)</Link></li>
-              <li><Link to="/events-shoots" className="hover:underline">Private event and film shoots</Link></li>
+              <li><Link to="/faq" className="hover:underline hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Contact us</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Give us your feedback!</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Jobs (in French)</Link></li>
+              <li><Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Private event and film shoots</Link></li>
             </ul>
           </div>
 
@@ -223,31 +227,22 @@ function Collection() {
             <div>
               <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Follow Us</h4>
               <div className="flex gap-4 mb-6">
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">f</span>
-                </a>
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">ig</span>
-                </a>
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">x</span>
-                </a>
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">yt</span>
-                </a>
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">p</span>
-                </a>
-                <a href="#" className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800">
-                  <span className="text-white text-sm">in</span>
-                </a>
+                {['f', 'ig', 'x', 'yt', 'p', 'in'].map((social) => (
+                  <Link 
+                    key={social}
+                    to="/coming-soon" 
+                    className="rounded-full border border-gray-600 w-10 h-10 flex items-center justify-center hover:bg-gray-800 hover:border-museum-gold transition-all"
+                  >
+                    <span className="text-white text-sm">{social}</span>
+                  </Link>
+                ))}
               </div>
             </div>
 
             <div>
               <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Membership</h4>
               <div className="h-8 mb-3 bg-gray-700 rounded"></div>
-              <Link to="/membership" className="text-white underline text-sm hover:text-museum-gold">
+              <Link to="/coming-soon" className="text-white underline text-sm hover:text-museum-gold transition-colors">
                 Become a Friend of the Errobelo (in French) →
               </Link>
             </div>
@@ -256,12 +251,13 @@ function Collection() {
 
         <div className="max-w-7xl mx-auto text-center text-xs text-gray-400 py-6">
           <div className="flex flex-wrap justify-center gap-4 mb-2">
-            <Link to="/legal" className="hover:underline">Legal Notice</Link>
-            <Link to="/privacy" className="hover:underline">Privacy policy</Link>
-            <Link to="/cookies" className="hover:underline">Cookies</Link>
-            <Link to="/credits" className="hover:underline">Credits</Link>
-            <Link to="/copyrights" className="hover:underline">Copyrights</Link>
+            <Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Legal Notice</Link>
+            <Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Privacy policy</Link>
+            <Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Cookies</Link>
+            <Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Credits</Link>
+            <Link to="/coming-soon" className="hover:underline hover:text-white transition-colors">Copyrights</Link>
           </div>
+          <p className="mt-4">© 2025 Museo del Errobelo. All rights reserved.</p>
         </div>
       </footer>
     </div>
