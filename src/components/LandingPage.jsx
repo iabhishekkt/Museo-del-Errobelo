@@ -426,7 +426,7 @@ function LandingPage() {
             <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
               <div className="relative h-96">
                 <img 
-                  src="https://collectionapi.metmuseum.org/api/collection/v1/iiif/255154/533046/main-image" 
+                  src="https://i.pinimg.com/564x/4f/c6/d8/4fc6d8d7e86886f606495abc4f1680e6.jpg" 
                   alt="Ancient Greek Amphora" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
                 />
@@ -452,7 +452,7 @@ function LandingPage() {
             <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
               <div className="relative h-96">
                 <img 
-                  src="https://www.britishmuseumshoponline.org/media/catalog/product/n/4/n412830_1_anubis_canopic_jar.jpg" 
+                  src="https://images.pexels.com/photos/14681329/pexels-photo-14681329.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" 
                   alt="Egyptian Canopic Jar" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
                 />
@@ -478,7 +478,7 @@ function LandingPage() {
             <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
               <div className="relative h-96">
                 <img 
-                  src="https://collectionapi.metmuseum.org/api/collection/v1/iiif/252884/534895/main-image" 
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Buste_4_Bardo_National_Museum.jpg/250px-Buste_4_Bardo_National_Museum.jpg" 
                   alt="Roman Marble Bust" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
                 />
@@ -504,7 +504,7 @@ function LandingPage() {
             <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
               <div className="relative h-96">
                 <img 
-                  src="https://images.metmuseum.org/CRDImages/as/original/DP-14605-073.jpg" 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS90rl6lGPpWkjtDaGQSOMpwNbxt2mSp3FswQ&s" 
                   alt="Ming Dynasty Vase" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
                 />
@@ -530,7 +530,7 @@ function LandingPage() {
             <Link to="/featured" className="relative group cursor-pointer overflow-hidden rounded-lg flex-shrink-0 w-[280px] md:w-[320px]">
               <div className="relative h-96">
                 <img 
-                  src="https://images.metmuseum.org/CRDImages/an/original/DP-13441-001.jpg" 
+                  src="https://cdn.sanity.io/images/cxgd3urn/production/0849783912550b396d3c6d9c91b201e23cfd9507-2327x1701.jpg" 
                   alt="Mesopotamian Clay Tablet" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-100" 
                 />

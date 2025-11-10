@@ -11,6 +11,12 @@ import ComingSoon from './components/ComingSoon';
 import Boutique from './components/Boutique';
 import FeaturedArtifacts from './components/FeaturedArtifacts';
 
+import ThreeDGallery from './components/ThreeDGallery';
+
+// In your <Routes> section:
+
+
+
 // In your Routes:
 
 
@@ -41,7 +47,7 @@ function App() {
         <Route path="/about" element={<ComingSoon />} />
         <Route path="/rules" element={<ComingSoon />} />
         <Route path="/loans" element={<ComingSoon />} />
-        <Route path="/corpus" element={<ComingSoon />} />
+        <Route path="/corpus" element={<ThreeDGallery />} />
         <Route path="/donate" element={<ComingSoon />} />
         <Route path="/press" element={<ComingSoon />} />
         <Route path="/contact" element={<ComingSoon />} />
@@ -58,6 +64,7 @@ function App() {
         <Route path="/explore" element={<Collection />} />
         <Route path="/errobelo-plus" element={<ComingSoon />} />
 <Route path="/boutique" element={<Boutique />} />
+        <Route path="/3d-gallery" element={<ThreeDGallery />} />
 
       </Routes>
     </BrowserRouter>
