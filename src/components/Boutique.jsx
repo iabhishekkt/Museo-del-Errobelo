@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar.jsx';
+import Navbar from './navbar';
 
 // Categories data with detailed descriptions
 const categories = [

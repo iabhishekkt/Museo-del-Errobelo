@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar.jsx';
+import Navbar from './navbar';
 
 
 // Import images
