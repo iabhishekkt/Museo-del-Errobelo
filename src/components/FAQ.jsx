@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import LanguageDropdown from './LanguageDropdown';
+import Navbar from './navbar';
 
 // Import image
 import faqHeader from '../assets/faqheader.png';
-import collectionmain2 from '../assets/collectionmain2.png';
 
 // FAQ Data
 const faqData = {
@@ -127,35 +126,10 @@ const faqData = {
 };
 
 function FAQ() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('tickets');
   const [openQuestion, setOpenQuestion] = useState(null);
   const [showComingSoon, setShowComingSoon] = useState(false);
-
-  // Navbar scroll effect
-  useEffect(() => {
-    let lastScroll = 0;
-    const navbar = document.getElementById('mainNavbar');
-    
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      
-      if (navbar) {
-        if (currentScroll <= 0) {
-          navbar.classList.remove('-translate-y-full');
-        } else if (currentScroll > lastScroll && currentScroll > 50) {
-          navbar.classList.add('-translate-y-full');
-        } else if (currentScroll < lastScroll) {
-          navbar.classList.remove('-translate-y-full');
-        }
-      }
-      
-      lastScroll = currentScroll;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const toggleQuestion = (index) => {
     setOpenQuestion(openQuestion === index ? null : index);
@@ -168,247 +142,153 @@ function FAQ() {
 
   return (
     <div className="bg-black font-playfair">
-      {/* Header */}
-      <header id="mainNavbar" className="fixed w-full z-50 h-28 bg-black transition-transform duration-500">
-        <div className="bg-black h-24">
-          <div className="container mx-auto px-8">
-            <nav className="flex items-center justify-between h-24">
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden text-white"
-              >
-                <div className="w-6 h-0.5 bg-white mb-1.5"></div>
-                <div className="w-6 h-0.5 bg-white mb-1.5"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
-              </button>
+      {/* Navbar Component */}
+      <Navbar onLoginClick={() => setShowLoginModal(true)} />
 
-              <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                <Link to="/" className="font-semibold text-3xl text-white text-center tracking-wide">
-                  MUSEO DEL ERROBELO
-                </Link>
-                <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent w-48 md:w-96 my-2"></div>
-              </div>
-
-              <div className="hidden md:flex items-center justify-between w-full">
-                <div className="flex items-center gap-8 text-white/80">
-                  <button className="hover:text-museum-gold transition-colors">
-                    <div className="w-5 h-5 border border-current rounded-full relative">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-current transform rotate-45"></div>
-                    </div>
-                  </button>
-                  <LanguageDropdown />
-                </div>
-
-                <div className="flex items-center gap-8">
-                  <Link to="/ticketing" className="bg-museum-gold text-white px-8 py-2.5 rounded-full hover:bg-museum-gold/90 transition-all duration-300 text-sm">
-                    Ticketing
-                  </Link>
-                </div>
-              </div>
-            </nav>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`md:hidden bg-black/95 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="container mx-auto px-8 py-4">
-            <div className="flex flex-col space-y-4">
-              <div className="text-white">
-                <LanguageDropdown />
-              </div>
-              <Link to="/palace" className="text-white hover:text-museum-gold transition-colors text-sm">Visit</Link>
-              <Link to="/life-at-museum" className="text-white hover:text-museum-gold transition-colors text-sm">Events</Link>
-              <Link to="/collection" className="text-white hover:text-museum-gold transition-colors text-sm">Explore</Link>
-              <Link to="/3d-gallery" className="text-white hover:text-museum-gold transition-colors text-sm">3D Gallery</Link>
-              <Link to="/ticketing" className="bg-museum-gold text-white px-4 py-2 rounded-full text-center text-sm">Ticketing</Link>
+      {/* Main Content - Starts below navbar */}
+      <div className="pt-28">
+        {/* FAQ Header Section */}
+        <section className="relative w-full">
+          <div className="relative h-[250px]">
+            <img src={faqHeader} alt="FAQ" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
+            <div className="absolute bottom-10 left-12">
+              <p className="text-white text-sm font-medium tracking-wider mb-2">FREQUENTLY ASKED QUESTIONS</p>
+              <h2 className="text-white text-4xl font-light tracking-wide">Answers from the Errobelo</h2>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Navigation Menu */}
-        <div className="bg-black hidden md:block">
-          <div className="container mx-auto px-8">
-            <div className="flex justify-center space-x-12 py-4 relative">
-              <Link to="/palace" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                VISIT
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              <Link to="/3d-gallery" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                3D ART GALLERY
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              <Link to="/collection" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                EXPLORE
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              
-              <div className="relative group">
-                <button className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 flex items-center gap-2">
-                  SEE MORE
-                  <svg className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-                
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-[800px] bg-black border-t-2 border-museum-gold opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  <div className="flex">
-                    <div className="w-1/2 p-8 space-y-4">
-                      <Link to="/boutique" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Online boutique</Link>
-                      <Link to="/life-at-museum" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Exhibitions and Events</Link>
-                      <a href="#" onClick={handleComingSoon} className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</a>
-                    </div>
-                    
-                    <div className="w-1/2 p-8 bg-gray-900">
-                      <div className="relative">
-                        <img src={collectionmain2} alt="Support" className="w-full h-48 object-cover rounded" />
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-white text-black px-3 py-1 text-xs font-medium rounded">Become a Patron</span>
-                        </div>
-                      </div>
-                      <div className="mt-6">
-                        <a href="#" onClick={handleComingSoon} className="flex items-center text-white hover:text-museum-gold transition-colors group/link">
-                          <span className="text-lg font-light mr-2">Support the Errobelo</span>
-                          <svg className="w-5 h-5 transition-transform group-hover/link:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                          </svg>
-                        </a>
-                        <p className="text-gray-400 text-sm mt-2">Individuals, companies or foundations</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* FAQ Header Section */}
-      <section className="relative w-full pt-28">
-        <div className="relative h-[250px]">
-          <img src={faqHeader} alt="FAQ" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
-          <div className="absolute bottom-10 left-12">
-            <p className="text-white text-sm font-medium tracking-wider mb-2">FREQUENTLY ASKED QUESTIONS</p>
-            <h2 className="text-white text-4xl font-light tracking-wide">Answers from the Errobelo</h2>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Layout */}
-      <section className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex gap-8">
-          
-          {/* Left Sidebar - Categories */}
-          <div className="w-80 flex-shrink-0">
-            <div className="bg-black rounded-lg shadow-lg border border-gray-800">
-              <nav className="p-0">
-                {Object.keys(faqData).map((category, index) => (
-                  <button
-                    key={category}
-                    onClick={() => {
-                      setActiveCategory(category);
-                      setOpenQuestion(null);
-                    }}
-                    className={`w-full text-left px-6 py-4 ${
-                      index < Object.keys(faqData).length - 1 ? 'border-b border-gray-800' : ''
-                    } hover:bg-gray-900 transition-colors flex items-center justify-between group ${
-                      activeCategory === category ? 'bg-gray-900 border-gray-700' : ''
-                    }`}
-                  >
-                    <span className={`${
-                      activeCategory === category ? 'text-white font-medium' : 'text-gray-400 group-hover:text-white'
-                    }`}>
-                      {faqData[category].title}
-                    </span>
-                    <svg
-                      className={`w-4 h-4 ${
-                        activeCategory === category ? 'text-gray-400' : 'text-gray-600 group-hover:text-gray-400'
+        {/* FAQ Layout */}
+        <section className="max-w-7xl mx-auto px-6 py-12">
+          <div className="flex flex-col lg:flex-row gap-8">
+            
+            {/* Left Sidebar - Categories */}
+            <div className="lg:w-80 flex-shrink-0">
+              <div className="bg-black rounded-lg shadow-lg border border-gray-800 sticky top-32">
+                <nav className="p-0">
+                  {Object.keys(faqData).map((category, index) => (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        setActiveCategory(category);
+                        setOpenQuestion(null);
+                      }}
+                      className={`w-full text-left px-6 py-4 ${
+                        index < Object.keys(faqData).length - 1 ? 'border-b border-gray-800' : ''
+                      } hover:bg-gray-900 transition-colors flex items-center justify-between group ${
+                        activeCategory === category ? 'bg-gray-900 border-l-4 border-l-museum-gold' : ''
                       }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </div>
-
-          {/* Right Content Area */}
-          <div className="flex-1">
-            <div className="bg-black rounded-lg shadow-lg border border-gray-800">
-              <div className="p-6 border-b border-gray-800">
-                <h2 className="text-2xl font-medium text-white">{faqData[activeCategory].title}</h2>
-              </div>
-              
-              <div className="divide-y divide-gray-800">
-                {faqData[activeCategory].questions.map((item, index) => (
-                  <details
-                    key={index}
-                    className="group"
-                    open={openQuestion === index}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleQuestion(index);
-                    }}
-                  >
-                    <summary className="px-6 py-4 cursor-pointer text-gray-400 hover:text-white hover:bg-gray-900 transition-colors flex items-center justify-between">
-                      <span className="font-medium">{item.q}</span>
+                      <span className={`${
+                        activeCategory === category ? 'text-white font-medium' : 'text-gray-400 group-hover:text-white'
+                      }`}>
+                        {faqData[category].title}
+                      </span>
                       <svg
-                        className={`w-5 h-5 text-gray-600 transition-transform ${
-                          openQuestion === index ? 'rotate-180' : ''
+                        className={`w-4 h-4 ${
+                          activeCategory === category ? 'text-museum-gold' : 'text-gray-600 group-hover:text-gray-400'
                         }`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                       </svg>
-                    </summary>
-                    {openQuestion === index && (
-                      <div className="px-6 pb-4 text-white leading-relaxed bg-gray-900">
-                        {item.a}
-                      </div>
-                    )}
-                  </details>
-                ))}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            </div>
+
+            {/* Right Content Area */}
+            <div className="flex-1">
+              <div className="bg-black rounded-lg shadow-lg border border-gray-800">
+                <div className="p-6 border-b border-gray-800">
+                  <h2 className="text-2xl font-medium text-white">{faqData[activeCategory].title}</h2>
+                  <p className="text-gray-400 text-sm mt-1">{faqData[activeCategory].questions.length} frequently asked questions</p>
+                </div>
+                
+                <div className="divide-y divide-gray-800">
+                  {faqData[activeCategory].questions.map((item, index) => (
+                    <details
+                      key={index}
+                      className="group"
+                      open={openQuestion === index}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleQuestion(index);
+                      }}
+                    >
+                      <summary className="px-6 py-4 cursor-pointer text-gray-300 hover:text-white hover:bg-gray-900 transition-colors flex items-center justify-between list-none">
+                        <span className="font-medium pr-4">{item.q}</span>
+                        <svg
+                          className={`w-5 h-5 text-museum-gold transition-transform flex-shrink-0 ${
+                            openQuestion === index ? 'rotate-180' : ''
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </summary>
+                      {openQuestion === index && (
+                        <div className="px-6 pb-4 pt-2 text-white leading-relaxed bg-gray-900/50 text-sm">
+                          {item.a}
+                        </div>
+                      )}
+                    </details>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* Help Banner */}
+        <section className="max-w-7xl mx-auto px-6 pb-20">
+          <div className="bg-gradient-to-r from-museum-gold/20 to-museum-gold/10 border border-museum-gold rounded-lg p-8 text-center">
+            <h3 className="text-2xl font-light text-white mb-3">Still have questions?</h3>
+            <p className="text-gray-300 mb-6">Can't find the answer you're looking for? Please contact our support team.</p>
+            <button
+              onClick={handleComingSoon}
+              className="bg-museum-gold text-black px-8 py-3 rounded-full font-medium hover:bg-museum-gold/90 transition-colors text-sm"
+            >
+              Contact Support
+            </button>
+          </div>
+        </section>
+      </div>
 
       {/* Coming Soon Popup */}
       {showComingSoon && (
-        <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative bg-black rounded-lg p-8 max-w-md w-full border border-museum-gold shadow-2xl">
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative bg-black rounded-lg p-8 max-w-sm w-full border border-museum-gold shadow-2xl">
             <button
               onClick={() => setShowComingSoon(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+              className="absolute top-3 right-3 text-white bg-black/60 hover:bg-black/80 rounded-full p-1.5 transition-all"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
             <div className="text-center">
-              <div className="mb-6">
-                <svg className="w-20 h-20 mx-auto text-museum-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-museum-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               
-              <h3 className="text-3xl font-light text-white mb-4">Coming Soon</h3>
-              <p className="text-gray-400 text-base mb-6 leading-relaxed">
-                This feature is currently under development. We're working hard to bring you an amazing experience.
+              <h3 className="text-2xl font-light text-white mb-3">Coming Soon</h3>
+              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                This feature is currently under development.
               </p>
               
               <button
                 onClick={() => setShowComingSoon(false)}
-                className="bg-museum-gold text-black px-8 py-3 rounded-full font-medium hover:bg-museum-gold/90 transition-all duration-300 text-sm"
+                className="bg-museum-gold text-black px-6 py-2 rounded-full font-medium hover:bg-museum-gold/90 transition-all duration-300 text-sm"
               >
                 Got it!
               </button>
@@ -444,7 +324,7 @@ function FAQ() {
           <div>
             <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/faq" className="hover:underline hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/faqs" className="hover:underline hover:text-white transition-colors">FAQ</Link></li>
               <li><a href="#" onClick={handleComingSoon} className="hover:underline hover:text-white transition-colors">Contact us</a></li>
               <li><a href="#" onClick={handleComingSoon} className="hover:underline hover:text-white transition-colors">Give us your feedback!</a></li>
               <li><a href="#" onClick={handleComingSoon} className="hover:underline hover:text-white transition-colors">Jobs (in French)</a></li>
@@ -467,9 +347,9 @@ function FAQ() {
             <div>
               <h4 className="uppercase text-white text-xs font-semibold tracking-widest mb-4">Membership</h4>
               <div className="h-8 mb-3 bg-gray-700 rounded"></div>
-              <a href="#" onClick={handleComingSoon} className="text-white underline text-sm hover:text-museum-gold transition-colors">
+              <Link to="/membership" className="text-white underline text-sm hover:text-museum-gold transition-colors">
                 Become a Friend of the Errobelo (in French) →
-              </a>
+              </Link>
             </div>
           </div>
         </div>

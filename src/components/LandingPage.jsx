@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
-import LanguageDropdown from './LanguageDropdown';
+import { AuthContext } from '../contexts/AuthContext';
+import Navbar from './navbar';
 
 // Import all assets
 import ebplus1 from '../assets/ebplus1.png';
@@ -18,30 +19,51 @@ import collectionmain6 from '../assets/collectionmain6.png';
 import collectionmain7 from '../assets/collectionmain7.png';
 
 function LandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mapEnabled, setMapEnabled] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showAppsModal, setShowAppsModal] = useState(false);
+  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
   const mapRef = useRef(null);
+  
+  const { login } = useContext(AuthContext);
 
-  // Navbar scroll effect
-  useEffect(() => {
-    let lastScroll = 0;
-    const navbar = document.getElementById('mainNavbar');
-    
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      if (navbar) {
-        if (currentScroll > lastScroll && currentScroll > 100) {
-          navbar.classList.add('-translate-y-full');
-        } else {
-          navbar.classList.remove('-translate-y-full');
-        }
-      }
-      lastScroll = currentScroll;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Museum videos data
+  const museumVideos = [
+    {
+      id: 1,
+      title: "The restoration of the Arc du Carrousel [ENG subtitles]",
+      duration: "7 min",
+      thumbnail: ebplus1,
+      videoUrl: "https://youtu.be/Z01FoDDyYUM?si=h90Tyy90668-l2P8"
+    },
+    {
+      id: 2,
+      title: "The restoration of the Napoleon-III apartments",
+      duration: "10 min",
+      thumbnail: ebplus2,
+      videoUrl: "https://youtu.be/Z01FoDDyYUM?si=h90Tyy90668-l2P8"
+    },
+    {
+      id: 3,
+      title: "The Salle des Etats",
+      duration: "4 min",
+      thumbnail: ebplus3,
+      videoUrl: "https://youtu.be/Z01FoDDyYUM?si=h90Tyy90668-l2P8"
+    },
+    {
+      id: 4,
+      title: "« Forêt » by Anne Teresa De Keersmaeker and Némo Flouret [ENG subtitles]",
+      duration: "7 min",
+      thumbnail: ebplus4,
+      videoUrl: "https://youtu.be/Z01FoDDyYUM?si=h90Tyy90668-l2P8"
+    }
+  ];
 
   // Custom marker icon
   const customIcon = L.divIcon({
@@ -71,123 +93,105 @@ function LandingPage() {
     }
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const success = login(username, password);
+    if (success) {
+      setShowLoginModal(false);
+      setUsername('');
+      setPassword('');
+      setLoginError('');
+    } else {
+      setLoginError('Invalid username or password');
+    }
+  };
+
+  const handleVideoClick = (videoUrl) => {
+    window.open(videoUrl, '_blank');
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    setNewsletterSuccess(true);
+    setTimeout(() => {
+      setNewsletterSuccess(false);
+      setNewsletterEmail('');
+      setShowNewsletterModal(false);
+    }, 2000);
+  };
+
   return (
     <div className="bg-black font-playfair">
-      {/* Header */}
-      <header id="mainNavbar" className="fixed w-full z-50 h-28 transform translate-y-0 transition-transform duration-500">
-        <div className="bg-black h-24">
-          <div className="container mx-auto px-8">
-            <nav className="flex items-center justify-between h-24">
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden text-white"
+      {/* Navbar Component */}
+      <Navbar onLoginClick={() => setShowLoginModal(true)} />
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            onClick={() => setShowLoginModal(false)}
+          ></div>
+          
+          <div className="relative bg-black border-2 border-museum-gold rounded-lg shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div className="bg-gradient-to-r from-black via-gray-900 to-black border-b border-museum-gold/30 p-6 text-center">
+              <h2 className="text-3xl font-semibold text-white tracking-wide mb-2">
+                MUSEO DEL ERROBELO
+              </h2>
+              <div className="h-px bg-gradient-to-r from-transparent via-museum-gold to-transparent w-3/4 mx-auto"></div>
+            </div>
+
+            <form onSubmit={handleLogin} className="p-8 space-y-6">
+              <div>
+                <label className="block text-white/80 text-sm font-light mb-2 tracking-wide">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white focus:outline-none focus:border-museum-gold transition-colors"
+                  placeholder="Enter username"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-white/80 text-sm font-light mb-2 tracking-wide">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white focus:outline-none focus:border-museum-gold transition-colors"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+
+              {loginError && (
+                <p className="text-red-500 text-sm text-center">{loginError}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-museum-gold text-white py-3 rounded-full hover:bg-museum-gold/90 transition-all duration-300 font-medium tracking-wide uppercase text-sm shadow-lg hover:shadow-museum-gold/50"
               >
-                <div className="w-6 h-0.5 bg-white mb-1.5"></div>
-                <div className="w-6 h-0.5 bg-white mb-1.5"></div>
-                <div className="w-6 h-0.5 bg-white"></div>
+                Sign In
               </button>
 
-              <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                <Link to="/" className="font-semibold text-3xl text-white text-center tracking-wide">
-                  MUSEO DEL ERROBELO
-                </Link>
-                <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent w-48 md:w-96 my-2"></div>
-              </div>
-
-              <div className="hidden md:flex items-center justify-between w-full">
-                <div className="flex items-center gap-8 text-white/80">
-                  <button className="hover:text-museum-gold transition-colors">
-                    <div className="w-5 h-5 border border-current rounded-full relative">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 border-t-2 border-r-2 border-current transform rotate-45"></div>
-                    </div>
-                  </button>
-                  <LanguageDropdown />
-                </div>
-
-                <div className="flex items-center gap-8">
-                  <Link to="/ticketing" className="bg-museum-gold text-white px-8 py-2.5 rounded-full hover:bg-museum-gold/90 transition-all duration-300 text-sm">
-                    Ticketing
-                  </Link>
-                </div>
-              </div>
-            </nav>
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(false)}
+                className="w-full text-gray-400 hover:text-white transition-colors text-sm"
+              >
+                Cancel
+              </button>
+            </form>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <div className={`md:hidden bg-black/95 ${mobileMenuOpen ? 'block' : 'hidden'}`}>
-          <div className="container mx-auto px-8 py-4">
-            <div className="flex flex-col space-y-4">
-              <div className="text-white">
-                <LanguageDropdown />
-              </div>
-              <Link to="/palace" className="text-white hover:text-museum-gold transition-colors text-sm">Visit</Link>
-              <Link to="/life-at-museum" className="text-white hover:text-museum-gold transition-colors text-sm">Events</Link>
-              <Link to="/collection" className="text-white hover:text-museum-gold transition-colors text-sm">Explore</Link>
-              <Link to="/3d-gallery" className="text-white hover:text-museum-gold transition-colors text-sm">3D Gallery</Link>
-              <Link to="/ticketing" className="bg-museum-gold text-white px-4 py-2 rounded-full text-center text-sm">Ticketing</Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Desktop Navigation Menu */}
-        <div className="bg-black hidden md:block">
-          <div className="container mx-auto px-8">
-            <div className="flex justify-center space-x-12 py-4 relative">
-              <Link to="/palace" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                VISIT
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              <Link to="/3d-gallery" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                3D ART GALLERY
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              <Link to="/collection" className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 group">
-                EXPLORE
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-              </Link>
-              
-              <div className="relative group">
-                <button className="relative text-white hover:text-museum-gold transition-colors uppercase text-sm tracking-wider pb-2 flex items-center gap-2">
-                  SEE MORE
-                  <svg className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></div>
-                </button>
-                
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-[800px] bg-black border-t-2 border-museum-gold opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  <div className="flex">
-                    <div className="w-1/2 p-8 space-y-4">
-                      <Link to="/boutique" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Online boutique</Link>
-                      <Link to="/life-at-museum" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Exhibitions and Events</Link>
-                      <Link to="/membership" className="block text-white hover:text-museum-gold transition-colors text-lg font-light">Support the Errobelo</Link>
-                    </div>
-                    
-                    <div className="w-1/2 p-8 bg-gray-900">
-                      <div className="relative">
-                        <img src={ebplus1} alt="Support the Errobelo" className="w-full h-48 object-cover rounded" />
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-white text-black px-3 py-1 text-xs font-medium rounded">Become a Patron</span>
-                        </div>
-                      </div>
-                      <div className="mt-6">
-                        <Link to="/support" className="flex items-center text-white hover:text-museum-gold transition-colors group/link">
-                          <span className="text-lg font-light mr-2">Support the Errobelo</span>
-                          <svg className="w-5 h-5 transition-transform group-hover/link:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                          </svg>
-                        </Link>
-                        <p className="text-gray-400 text-sm mt-2">Individuals, companies or foundations</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      )}
 
       {/* Hero Section */}
       <section className="relative h-screen overflow-hidden">
@@ -219,14 +223,15 @@ function LandingPage() {
         </div>
 
         <div className="absolute bottom-12 left-0 right-0 flex justify-center" style={{zIndex: 2}}>
-          <Link to="/journey" className="relative bg-black/30 backdrop-blur-sm text-white px-16 py-5 rounded-full border-2 border-museum-gold/70 shadow-[0_0_20px_rgba(184,134,11,0.3)] hover:border-museum-gold hover:shadow-[0_0_30px_rgba(184,134,11,0.5)] hover:bg-black/40 transition-all duration-500 overflow-hidden group">
-            <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-museum-gold/30 to-transparent transition-all duration-600 group-hover:left-full animate-shimmer"></div>
-            <span className="relative text-lg tracking-wider uppercase font-light">Begin Your Journey</span>
-          </Link>
+          <Link to="/palace" className="relative bg-black/30 backdrop-blur-sm text-white px-16 py-5 rounded-full border-2 border-museum-gold/70 shadow-[0_0_20px_rgba(184,134,11,0.3)] hover:border-museum-gold hover:shadow-[0_0_30px_rgba(184,134,11,0.5)] hover:bg-black/40 transition-all duration-500 overflow-hidden group">
+  <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-museum-gold/30 to-transparent transition-all duration-600 group-hover:left-full animate-shimmer"></div>
+  <span className="relative text-lg tracking-wider uppercase font-light">Begin Your Journey</span>
+</Link>
+
         </div>
       </section>
 
-      {/* ERROBELO+ Section */}
+      {/* ERROBELO+ Section with Video Links */}
       <section className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-5xl text-white font-light mb-16 tracking-wide">
@@ -234,117 +239,38 @@ function LandingPage() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Video Card 1 */}
-            <div className="relative group cursor-pointer">
-              <div className="relative h-80 rounded-lg overflow-hidden">
-                <img src={ebplus1} alt="Restoration of the Arc" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40"></div>
-                
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-white/30 transition-all duration-300">
-                    <div className="w-6 h-6 text-white relative ml-1">
-                      <div className="w-0 h-0 border-l-[12px] border-l-current border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
+            {museumVideos.map((video) => (
+              <div 
+                key={video.id}
+                onClick={() => handleVideoClick(video.videoUrl)}
+                className="relative group cursor-pointer"
+              >
+                <div className="relative h-80 rounded-lg overflow-hidden">
+                  <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40"></div>
+                  
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+                      <div className="w-6 h-6 text-white relative ml-1">
+                        <div className="w-0 h-0 border-l-[12px] border-l-current border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-normal text-lg mb-2 leading-tight">
-                    The restoration of the Arc du Carrousel [ENG subtitles]
-                  </h3>
-                  <div className="flex items-center text-white/90 text-sm gap-2">
-                    <div className="w-4 h-3 border border-current rounded relative">
-                      <div className="absolute top-1 left-1 w-1 h-1 bg-current rounded-full"></div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-white font-normal text-lg mb-2 leading-tight">
+                      {video.title}
+                    </h3>
+                    <div className="flex items-center text-white/90 text-sm gap-2">
+                      <div className="w-4 h-3 border border-current rounded relative">
+                        <div className="absolute top-1 left-1 w-1 h-1 bg-current rounded-full"></div>
+                      </div>
+                      <span className="uppercase tracking-wider font-medium">VIDEO • {video.duration}</span>
                     </div>
-                    <span className="uppercase tracking-wider font-medium">VIDEO • 7 min</span>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Video Card 2 */}
-            <div className="relative group cursor-pointer">
-              <div className="relative h-80 rounded-lg overflow-hidden">
-                <img src={ebplus2} alt="Napoleon III Apartments" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40"></div>
-                
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-white/30 transition-all duration-300">
-                    <div className="w-6 h-6 text-white relative ml-1">
-                      <div className="w-0 h-0 border-l-[12px] border-l-current border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-normal text-lg mb-2 leading-tight">
-                    The restoration of the Napoleon-III apartments
-                  </h3>
-                  <div className="flex items-center text-white/90 text-sm gap-2">
-                    <div className="w-4 h-3 border border-current rounded relative">
-                      <div className="absolute top-1 left-1 w-1 h-1 bg-current rounded-full"></div>
-                    </div>
-                    <span className="uppercase tracking-wider font-medium">VIDEO • 10 min</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Video Card 3 */}
-            <div className="relative group cursor-pointer">
-              <div className="relative h-80 rounded-lg overflow-hidden">
-                <img src={ebplus3} alt="Salle des Etats" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40"></div>
-                
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-white/30 transition-all duration-300">
-                    <div className="w-6 h-6 text-white relative ml-1">
-                      <div className="w-0 h-0 border-l-[12px] border-l-current border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-normal text-lg mb-2 leading-tight">
-                    The Salle des Etats
-                  </h3>
-                  <div className="flex items-center text-white/90 text-sm gap-2">
-                    <div className="w-4 h-3 border border-current rounded relative">
-                      <div className="absolute top-1 left-1 w-1 h-1 bg-current rounded-full"></div>
-                    </div>
-                    <span className="uppercase tracking-wider font-medium">VIDEO • 4 min</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Video Card 4 */}
-            <div className="relative group cursor-pointer">
-              <div className="relative h-80 rounded-lg overflow-hidden">
-                <img src={ebplus4} alt="Forêt by Anne Teresa" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40"></div>
-                
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-4 group-hover:bg-white/30 transition-all duration-300">
-                    <div className="w-6 h-6 text-white relative ml-1">
-                      <div className="w-0 h-0 border-l-[12px] border-l-current border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-normal text-lg mb-2 leading-tight">
-                    « Forêt » by Anne Teresa De Keersmaeker and Némo Flouret [ENG subtitles]
-                  </h3>
-                  <div className="flex items-center text-white/90 text-sm gap-2">
-                    <div className="w-4 h-3 border border-current rounded relative">
-                      <div className="absolute top-1 left-1 w-1 h-1 bg-current rounded-full"></div>
-                    </div>
-                    <span className="uppercase tracking-wider font-medium">VIDEO • 7 min</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
           
           <div className="flex justify-center mt-12">
@@ -355,20 +281,50 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Collection Gallery */}
+      {/* Collection Gallery with Hover and Click */}
       <section className="bg-black relative overflow-hidden max-h-[700px]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="w-full flex flex-col md:flex-row gap-8 justify-center items-start">
             <div className="flex flex-col gap-8 w-full md:w-1/3">
-              <img src={collectionmain1} alt="Ceiling" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
-              <img src={collectionmain2} alt="Statue" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain1} 
+                  alt="Ceiling" 
+                  className="rounded-lg object-cover w-full h-96 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain2} 
+                  alt="Statue" 
+                  className="rounded-lg object-cover w-full h-64 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
             </div>
             
             <div className="flex flex-col gap-8 w-full md:w-1/3 relative">
-              <img src={collectionmain3} alt="Relief" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
-              <img src={collectionmain4} alt="Painting" className="rounded-lg object-cover w-full h-56 bg-gray-800" />
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain3} 
+                  alt="Relief" 
+                  className="rounded-lg object-cover w-full h-56 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain4} 
+                  alt="Painting" 
+                  className="rounded-lg object-cover w-full h-56 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
               <div className="relative w-full">
-                <img src={collectionmain5} alt="Ancient Wall" className="rounded-lg object-cover w-full h-48 bg-gray-800" />
+                <Link to="/collection" className="group cursor-pointer block">
+                  <img 
+                    src={collectionmain5} 
+                    alt="Ancient Wall" 
+                    className="rounded-lg object-cover w-full h-48 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                  />
+                </Link>
                 <div className="absolute left-1/2 -translate-x-1/2 bottom-16 z-30">
                   <Link to="/collection" className="bg-white text-black rounded-full px-8 py-3 text-lg font-medium shadow hover:bg-gray-100 transition">
                     Explore
@@ -378,8 +334,20 @@ function LandingPage() {
             </div>
             
             <div className="flex flex-col gap-8 w-full md:w-1/3">
-              <img src={collectionmain6} alt="Tilework" className="rounded-lg object-cover w-full h-96 bg-gray-800" />
-              <img src={collectionmain7} alt="Statue 2" className="rounded-lg object-cover w-full h-64 bg-gray-800" />
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain6} 
+                  alt="Tilework" 
+                  className="rounded-lg object-cover w-full h-96 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
+              <Link to="/collection" className="group cursor-pointer">
+                <img 
+                  src={collectionmain7} 
+                  alt="Statue 2" 
+                  className="rounded-lg object-cover w-full h-64 bg-gray-800 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-museum-gold/20" 
+                />
+              </Link>
             </div>
           </div>
         </div>
@@ -564,20 +532,20 @@ function LandingPage() {
       <section className="w-full bg-black">
         <div className="bg-black mt-10 text-white">
           <div className="hidden md:flex justify-between items-center py-2 text-xl font-semibold tracking-widest uppercase px-4 lg:px-20">
-            <button className="hover:underline">OFFICIAL APPS</button>
+            <button onClick={() => setShowAppsModal(true)} className="hover:underline hover:text-museum-gold transition-colors">OFFICIAL APPS</button>
             <div className="border-l border-gray-600 h-5"></div>
-            <button className="hover:underline">SOCIAL NETWORK</button>
+            <button onClick={() => setShowSocialModal(true)} className="hover:underline hover:text-museum-gold transition-colors">SOCIAL NETWORK</button>
             <div className="border-l border-gray-600 h-5"></div>
-            <button className="hover:underline">NEWSLETTER</button>
+            <button onClick={() => setShowNewsletterModal(true)} className="hover:underline hover:text-museum-gold transition-colors">NEWSLETTER</button>
           </div>
           
           <div className="md:hidden px-4 py-4">
             <div className="flex flex-col space-y-4 text-center">
-              <button className="hover:underline text-lg font-semibold tracking-wider uppercase">OFFICIAL APPS</button>
+              <button onClick={() => setShowAppsModal(true)} className="hover:underline text-lg font-semibold tracking-wider uppercase hover:text-museum-gold transition-colors">OFFICIAL APPS</button>
               <div className="border-b border-gray-600 w-full"></div>
-              <button className="hover:underline text-lg font-semibold tracking-wider uppercase">SOCIAL NETWORK</button>
+              <button onClick={() => setShowSocialModal(true)} className="hover:underline text-lg font-semibold tracking-wider uppercase hover:text-museum-gold transition-colors">SOCIAL NETWORK</button>
               <div className="border-b border-gray-600 w-full"></div>
-              <button className="hover:underline text-lg font-semibold tracking-wider uppercase">NEWSLETTER</button>
+              <button onClick={() => setShowNewsletterModal(true)} className="hover:underline text-lg font-semibold tracking-wider uppercase hover:text-museum-gold transition-colors">NEWSLETTER</button>
             </div>
           </div>
         </div>
@@ -617,6 +585,224 @@ function LandingPage() {
           )}
         </div>
       </section>
+
+      {/* Official Apps Modal */}
+      {showAppsModal && (
+        <div 
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)' }}
+        >
+          <div className="relative bg-black rounded-lg p-6 md:p-8 max-w-lg w-full border border-museum-gold shadow-2xl">
+            <button
+              onClick={() => setShowAppsModal(false)}
+              className="absolute top-3 right-3 text-white hover:text-museum-gold transition-colors bg-gray-900 hover:bg-gray-800 rounded-full p-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h3 className="text-2xl font-light text-white mb-6">Official Apps</h3>
+            
+            <div className="space-y-4">
+              <a 
+                href="https://apps.apple.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors group"
+              >
+                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
+                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-white font-medium">Download on iOS</h4>
+                  <p className="text-gray-400 text-sm">Available on the App Store</p>
+                </div>
+                <svg className="w-5 h-5 text-museum-gold transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+
+              <a 
+                href="https://play.google.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors group"
+              >
+                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
+                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-white font-medium">Download on Android</h4>
+                  <p className="text-gray-400 text-sm">Available on Google Play</p>
+                </div>
+                <svg className="w-5 h-5 text-museum-gold transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+
+              <div className="mt-6 p-4 bg-gray-900 rounded-lg">
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Experience the museum in your pocket. Explore collections, book tickets, and get audio guides on the go.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Social Network Modal */}
+      {showSocialModal && (
+        <div 
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)' }}
+        >
+          <div className="relative bg-black rounded-lg p-6 md:p-8 max-w-lg w-full border border-museum-gold shadow-2xl">
+            <button
+              onClick={() => setShowSocialModal(false)}
+              className="absolute top-3 right-3 text-white hover:text-museum-gold transition-colors bg-gray-900 hover:bg-gray-800 rounded-full p-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h3 className="text-2xl font-light text-white mb-6">Follow Us</h3>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-blue-600 rounded-lg transition-colors group">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">Facebook</span>
+              </a>
+
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 rounded-lg transition-colors group">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">Instagram</span>
+              </a>
+
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-black rounded-lg transition-colors group border hover:border-white">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">X (Twitter)</span>
+              </a>
+
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-red-600 rounded-lg transition-colors group">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">YouTube</span>
+              </a>
+
+              <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-red-700 rounded-lg transition-colors group">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0a12 12 0 0 0-4.37 23.17c-.1-.86-.19-2.27.04-3.24l1.35-5.72s-.34-.69-.34-1.7c0-1.6.92-2.78 2.07-2.78.98 0 1.46.74 1.46 1.62 0 .99-.63 2.47-.96 3.84-.27 1.15.58 2.09 1.72 2.09 2.06 0 3.65-2.18 3.65-5.32 0-2.78-2-4.72-4.86-4.72-3.31 0-5.25 2.48-5.25 5.04 0 1 .38 2.06.86 2.64.09.11.1.21.08.32l-.31 1.3c-.05.2-.17.24-.4.15-1.41-.66-2.3-2.73-2.3-4.39 0-3.58 2.6-6.87 7.51-6.87 3.94 0 7 2.81 7 6.56 0 3.91-2.47 7.06-5.89 7.06-1.15 0-2.23-.6-2.6-1.3l-.71 2.7c-.26.98-.95 2.21-1.42 2.96A12 12 0 1 0 12 0z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">Pinterest</span>
+              </a>
+
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-4 bg-gray-900 hover:bg-blue-700 rounded-lg transition-colors group">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                <span className="text-white font-medium text-sm">LinkedIn</span>
+              </a>
+            </div>
+
+            <div className="mt-6 p-4 bg-gray-900 rounded-lg">
+              <p className="text-gray-400 text-sm text-center leading-relaxed">
+                Stay connected with daily art inspiration and museum updates
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Newsletter Modal */}
+      {showNewsletterModal && (
+        <div 
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(8px)' }}
+        >
+          <div className="relative bg-black rounded-lg p-6 md:p-8 max-w-md w-full border border-museum-gold shadow-2xl">
+            <button
+              onClick={() => {
+                setShowNewsletterModal(false);
+                setNewsletterSuccess(false);
+                setNewsletterEmail('');
+              }}
+              className="absolute top-3 right-3 text-white hover:text-museum-gold transition-colors bg-gray-900 hover:bg-gray-800 rounded-full p-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {!newsletterSuccess ? (
+              <>
+                <h3 className="text-2xl font-light text-white mb-2">Newsletter</h3>
+                <p className="text-gray-400 text-sm mb-6">Stay updated with exhibitions, events, and exclusive content</p>
+                
+                <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-white/80 text-sm font-light mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white focus:outline-none focus:border-museum-gold transition-colors"
+                      placeholder="your@email.com"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <input type="checkbox" id="terms" required className="mt-1" />
+                    <label htmlFor="terms" className="text-gray-400 text-xs">
+                      I agree to receive newsletters and accept the privacy policy
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-museum-gold text-white py-3 rounded-full hover:bg-museum-gold/90 transition-all duration-300 font-medium text-sm uppercase tracking-wide"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+
+                <div className="mt-6 p-4 bg-gray-900 rounded-lg">
+                  <p className="text-gray-400 text-xs text-center leading-relaxed">
+                    Join 50,000+ art enthusiasts receiving weekly updates
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-light text-white mb-2">Success!</h3>
+                <p className="text-gray-400 text-sm">
+                  Thank you for subscribing to our newsletter
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="bg-black text-gray-400 pt-16 px-6 md:px-12">
