@@ -7,7 +7,6 @@ import collectionHeader from '../assets/collection_header.jpg';
 import socrates from '../assets/Socrates.jfif';
 
 function Collection() {
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
 
   const handleComingSoon = (e) => {
@@ -18,7 +17,7 @@ function Collection() {
   return (
     <div className="bg-black font-playfair">
       {/* Navbar Component */}
-      <Navbar onLoginClick={() => setShowLoginModal(true)} />
+      <Navbar />
 
       {/* Main Content - Starts below navbar */}
       <div className="pt-28">
