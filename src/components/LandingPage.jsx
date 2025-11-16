@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import { AuthContext } from '../contexts/AuthContext';
-import Navbar from './navbar';
+import Navbar from './navbar.jsx';
 
 // Import all assets
 import ebplus1 from '../assets/ebplus1.png';

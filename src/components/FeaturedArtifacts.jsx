@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar';
+import Navbar from './navbar.jsx';
 
 // Image Magnifier Component
 const ImageMagnifier = ({ src, alt, className }) => {

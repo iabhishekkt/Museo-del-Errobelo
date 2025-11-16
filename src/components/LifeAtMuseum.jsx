@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar';
+import Navbar from './navbar.jsx';
 
 // Import local images
 import heroImage from '../assets/image.png';
