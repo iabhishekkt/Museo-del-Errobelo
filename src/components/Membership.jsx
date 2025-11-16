@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar';
+import Navbar from './Navbar';
 import { AuthContext } from '../contexts/AuthContext';
 
 // Import images

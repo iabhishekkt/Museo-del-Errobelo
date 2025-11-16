@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar';
+import Navbar from './Navbar';
 import collectionHeader from '../assets/collection_header.jpg';
 
 const ITEMS_PER_PAGE = 12;
